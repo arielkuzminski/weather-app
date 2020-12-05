@@ -11,14 +11,18 @@ weatherForm.addEventListener("submit", (event) => {
   messageWeather.textContent = "";
 
   fetch(`/weather?address=${searchInput.value}`)
-    .then(response => response.json())
+    .then((response) => response.json())
     .then((data) => {
-        messageLocation.textContent = data.location;
-        messageWeather.textContent = `Temperature in city of ${data.address} is: ${data.forecast.currentTemperature}`;
-        messageStatus.textContent = "";
+      if (data.error) {
+        messageLocation.textContent = "";
+        return (messageStatus.textContent = data.error);
+      }
+      messageLocation.textContent = data.location;
+      messageWeather.textContent = `Temperature in city of ${data.address} is: ${data.forecast.currentTemperature}`;
+      messageStatus.textContent = "";
     })
     .catch((error) => {
-        console.log(error);
-        messageStatus.textContent = "Please try again!";
+      console.log(error);
+      messageStatus.textContent = error;
     });
 });
